@@ -4,6 +4,12 @@
 
 > This project was built as a rapid prototype demonstrating how AI can eliminate the manual effort of extracting, assigning, and tracking action items from meetings — a workflow that costs enterprise teams hours every week.
 
+## 🔴 Live Demo
+
+**[ai-meeting-notes-action-items-automator-8nooedz8m.vercel.app](https://ai-meeting-notes-action-items-automator-8nooedz8m.vercel.app)**
+
+Click **"Load sample transcript"** → **"⚡ Extract Action Items"** to see it in action.
+
 ## 🎯 Problem Statement
 
 Across large organisations, meeting outcomes get lost. Notes are taken inconsistently, action items are buried in paragraphs of text, and follow-up depends on someone manually parsing what was discussed. This results in:
@@ -131,12 +137,7 @@ Open [http://localhost:3000](http://localhost:3000) to use the app.
 
 ## ☁️ Deploy
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/ChristosLeptokaropoulos/AI-Meeting-Notes-Action-Items-Automator)
-
-Set environment variables in Vercel project settings:
-- `NEXT_PUBLIC_SUPABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- `OPENAI_API_KEY`
+Live at **[ai-meeting-notes-action-items-automator-8nooedz8m.vercel.app](https://ai-meeting-notes-action-items-automator-8nooedz8m.vercel.app)** — deployed on [Vercel](https://vercel.com/) with environment variables configured securely via the Vercel dashboard. All API keys are stored server-side — nothing is exposed to the browser.
 
 ## ⏱️ Build Time
 
