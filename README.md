@@ -1,14 +1,15 @@
-# ⚡ Meeting Action Extractor
+# ⚡ Meeting Action Extractor — with Audio Transcription
 
-**AI-powered tool that converts meeting transcripts into structured, trackable action items — built in under 8 hours.**
+**AI-powered tool that converts meeting transcripts — or audio recordings — into structured, trackable action items.**
 
-> This project was built as a rapid prototype demonstrating how AI can eliminate the manual effort of extracting, assigning, and tracking action items from meetings — a workflow that costs enterprise teams hours every week.
+> Paste a transcript or upload an audio/video file. OpenAI Whisper transcribes the recording, GPT-4o extracts every action item, and everything lands on a persistent dashboard. Built as a rapid prototype demonstrating how AI can eliminate the manual effort of processing meeting outcomes.
 
 ## 🔴 Live Demo
 
 **[ai-meeting-notes-action-items-automator-8nooedz8m.vercel.app](https://ai-meeting-notes-action-items-automator-8nooedz8m.vercel.app)**
 
-Click **"Load sample transcript"** → **"⚡ Extract Action Items"** to see it in action.
+**Text mode:** Click **"Load sample transcript"** → **"⚡ Extract Action Items"**  
+**Audio mode:** Switch to **"🎙️ Upload Audio"** → drag & drop an MP3/WAV/M4A file → **"🎙️ Transcribe & Extract"**
 
 ## 🎯 Problem Statement
 
@@ -19,13 +20,14 @@ Across large organisations, meeting outcomes get lost. Notes are taken inconsist
 
 ## 💡 Solution
 
-Paste a meeting transcript → AI instantly extracts:
+Paste a transcript **or upload an audio/video recording** → AI instantly extracts:
 - **Structured action items** with clear task descriptions
 - **Assigned owners** based on conversational context
 - **Deadlines** (explicit or inferred)
 - **Priority levels** based on urgency cues
+- **Audio transcription** via OpenAI Whisper with full transcript shown for verification
 
-All items persist to a filterable dashboard where status can be tracked over time.
+All items persist to a filterable dashboard where status can be tracked over time. Each meeting is tagged with its source (📝 Pasted / 🎤 Audio) for full traceability.
 
 ## 🛠️ Tech Stack
 
@@ -34,17 +36,25 @@ All items persist to a filterable dashboard where status can be tracked over tim
 | **Next.js 16** (App Router, TypeScript) | Full-stack framework with server-side API routes |
 | **Supabase** (PostgreSQL) | Database with Row-Level Security enabled |
 | **OpenAI GPT-4o** | AI extraction with structured JSON output mode |
+| **OpenAI Whisper** | Audio/video → text transcription (25MB limit) |
 | **shadcn/ui + Tailwind CSS** | Accessible, professional UI components |
 | **Vercel** | Deployment with automatic HTTPS and CI/CD |
 
 ## 🏗️ Architecture
 
 ```
-User pastes transcript
-    → Next.js API Route (/api/extract)
-        → OpenAI GPT-4o (structured JSON extraction)
-            → Supabase (persist meeting + action items)
-                → Dashboard (filter, track, update status)
+Text input:                          Audio input:
+User pastes transcript               User uploads audio/video file
+    │                                    │
+    │                                    → /api/transcribe
+    │                                    → OpenAI Whisper (speech-to-text)
+    │                                    │
+    ├────────────────────────────────────┘
+    ↓
+→ /api/extract
+→ OpenAI GPT-4o (structured JSON extraction)
+→ Supabase (persist meeting + action items, tagged by source)
+→ Dashboard (filter, track, update status)
 ```
 
 ## 🔒 Governance & Security
@@ -59,6 +69,7 @@ User pastes transcript
 
 | Method | Route | Description |
 |--------|-------|-------------|
+| POST | `/api/transcribe` | Upload audio file → get Whisper transcription |
 | POST | `/api/extract` | Send transcript → get AI-extracted action items |
 | GET | `/api/meetings` | Fetch all meetings with nested action items |
 | PATCH | `/api/action-items/[id]` | Update status, priority, owner, deadline, or task |
@@ -68,15 +79,17 @@ User pastes transcript
 ```
 src/
 ├── app/
-│   ├── page.tsx              # Home — transcript input + extraction
-│   ├── dashboard/page.tsx    # Dashboard — filterable action items view
+│   ├── page.tsx              # Home — paste transcript or upload audio
+│   ├── dashboard/page.tsx    # Dashboard — filterable action items + source badges
 │   ├── layout.tsx            # Root layout with navigation
 │   └── api/
-│       ├── extract/route.ts
+│       ├── transcribe/route.ts  # Whisper audio transcription endpoint
+│       ├── extract/route.ts     # GPT-4o action item extraction
 │       ├── meetings/route.ts
 │       └── action-items/[id]/route.ts
 ├── lib/
 │   ├── openai.ts             # GPT-4o extraction logic
+│   ├── whisper.ts            # Whisper transcription + file validation
 │   ├── supabase.ts           # Supabase client
 │   └── types.ts              # TypeScript interfaces
 └── components/ui/            # shadcn/ui components
@@ -90,6 +103,7 @@ create table meetings (
   title text,
   raw_transcript text,
   summary text,
+  source text check (source in ('paste', 'audio')),
   created_at timestamptz default now()
 );
 
@@ -114,7 +128,8 @@ If transitioning this prototype to production scale:
 3. **Notifications** — Slack/Teams alerts for assigned action items
 4. **Audit logging** — Track all changes for compliance
 5. **Role-based access** — Scoped RLS policies per team/department
-6. **Transcript sources** — Support audio upload with Whisper transcription
+6. **Speaker diarisation** — Identify individual speakers in audio recordings
+7. **Real-time recording** — In-browser microphone capture with live transcription
 
 ## 📦 Run Locally
 
