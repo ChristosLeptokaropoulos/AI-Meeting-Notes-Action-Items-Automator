@@ -1,53 +1,82 @@
-# AI Meeting Action Extractor
+# ⚡ Meeting Action Extractor
 
-A full-stack web app that uses AI to extract structured action items from meeting transcripts. Paste a transcript, get tasks with owners, deadlines, and priorities — then track everything in a persistent dashboard.
+**AI-powered tool that converts meeting transcripts into structured, trackable action items — built in under 8 hours.**
 
-## Features
+> This project was built as a rapid prototype demonstrating how AI can eliminate the manual effort of extracting, assigning, and tracking action items from meetings — a workflow that costs enterprise teams hours every week.
 
-- **AI-Powered Extraction** — GPT-4o parses meeting transcripts and returns structured action items (task, owner, deadline, priority)
-- **Persistent Dashboard** — View all action items across all meetings with status and priority filters
-- **Inline Status Updates** — Change task status (Pending → In Progress → Completed) directly from the dashboard
-- **Sample Transcript** — One-click demo with a realistic meeting transcript
-- **Real-Time Stats** — At-a-glance counts for total, pending, in-progress, completed, and high-priority items
+## 🎯 Problem Statement
 
-## Tech Stack
+Across large organisations, meeting outcomes get lost. Notes are taken inconsistently, action items are buried in paragraphs of text, and follow-up depends on someone manually parsing what was discussed. This results in:
+- Missed deadlines due to unclear ownership
+- Duplicated effort from poor visibility
+- Hours spent weekly on manual note processing
 
-| Layer | Technology |
-|-------|-----------|
-| Framework | Next.js 16 (App Router, TypeScript) |
-| Styling | Tailwind CSS + shadcn/ui |
-| AI | OpenAI GPT-4o |
-| Database | Supabase (PostgreSQL) |
-| Deployment | Vercel |
+## 💡 Solution
 
-## Getting Started
+Paste a meeting transcript → AI instantly extracts:
+- **Structured action items** with clear task descriptions
+- **Assigned owners** based on conversational context
+- **Deadlines** (explicit or inferred)
+- **Priority levels** based on urgency cues
 
-### Prerequisites
+All items persist to a filterable dashboard where status can be tracked over time.
 
-- Node.js 18+
-- A [Supabase](https://supabase.com/) project with `meetings` and `action_items` tables
-- An [OpenAI](https://platform.openai.com/) API key
+## 🛠️ Tech Stack
 
-### Setup
+| Technology | Role |
+|---|---|
+| **Next.js 16** (App Router, TypeScript) | Full-stack framework with server-side API routes |
+| **Supabase** (PostgreSQL) | Database with Row-Level Security enabled |
+| **OpenAI GPT-4o** | AI extraction with structured JSON output mode |
+| **shadcn/ui + Tailwind CSS** | Accessible, professional UI components |
+| **Vercel** | Deployment with automatic HTTPS and CI/CD |
 
-```bash
-# Install dependencies
-npm install
+## 🏗️ Architecture
 
-# Create environment file
-cp .env.example .env.local
-# Edit .env.local with your keys:
-#   NEXT_PUBLIC_SUPABASE_URL=
-#   NEXT_PUBLIC_SUPABASE_ANON_KEY=
-#   OPENAI_API_KEY=
-
-# Run development server
-npm run dev
+```
+User pastes transcript
+    → Next.js API Route (/api/extract)
+        → OpenAI GPT-4o (structured JSON extraction)
+            → Supabase (persist meeting + action items)
+                → Dashboard (filter, track, update status)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to use the app.
+## 🔒 Governance & Security
 
-### Database Schema
+- Row-Level Security (RLS) enabled on all Supabase tables from Day 0
+- API keys stored server-side only — OpenAI key never reaches the browser
+- Structured JSON output mode (`response_format: json_object`) ensures predictable parsing
+- Server-side input validation on all API routes
+- HTTPS enforced via Vercel
+
+## 📡 API Routes
+
+| Method | Route | Description |
+|--------|-------|-------------|
+| POST | `/api/extract` | Send transcript → get AI-extracted action items |
+| GET | `/api/meetings` | Fetch all meetings with nested action items |
+| PATCH | `/api/action-items/[id]` | Update status, priority, owner, deadline, or task |
+
+## 📁 Project Structure
+
+```
+src/
+├── app/
+│   ├── page.tsx              # Home — transcript input + extraction
+│   ├── dashboard/page.tsx    # Dashboard — filterable action items view
+│   ├── layout.tsx            # Root layout with navigation
+│   └── api/
+│       ├── extract/route.ts
+│       ├── meetings/route.ts
+│       └── action-items/[id]/route.ts
+├── lib/
+│   ├── openai.ts             # GPT-4o extraction logic
+│   ├── supabase.ts           # Supabase client
+│   └── types.ts              # TypeScript interfaces
+└── components/ui/            # shadcn/ui components
+```
+
+## 🗄️ Database Schema
 
 ```sql
 create table meetings (
@@ -71,34 +100,36 @@ create table action_items (
 );
 ```
 
-## API Routes
+## 🚀 Production Roadmap
 
-| Method | Route | Description |
-|--------|-------|-------------|
-| POST | `/api/extract` | Send transcript → get AI-extracted action items |
-| GET | `/api/meetings` | Fetch all meetings with nested action items |
-| PATCH | `/api/action-items/[id]` | Update status, priority, owner, deadline, or task |
+If transitioning this prototype to production scale:
+1. **Authentication** — Add Supabase Auth with SSO/SAML for enterprise login
+2. **Calendar integration** — Auto-ingest transcripts from Outlook/Google Calendar
+3. **Notifications** — Slack/Teams alerts for assigned action items
+4. **Audit logging** — Track all changes for compliance
+5. **Role-based access** — Scoped RLS policies per team/department
+6. **Transcript sources** — Support audio upload with Whisper transcription
 
-## Project Structure
+## 📦 Run Locally
 
+```bash
+git clone https://github.com/ChristosLeptokaropoulos/AI-Meeting-Notes-Action-Items-Automator.git
+cd AI-Meeting-Notes-Action-Items-Automator
+npm install
+
+# Create environment file
+cp .env.example .env.local
+# Edit .env.local with your keys:
+#   NEXT_PUBLIC_SUPABASE_URL=
+#   NEXT_PUBLIC_SUPABASE_ANON_KEY=
+#   OPENAI_API_KEY=
+
+npm run dev
 ```
-src/
-├── app/
-│   ├── page.tsx              # Home — transcript input + extraction
-│   ├── dashboard/page.tsx    # Dashboard — filterable action items view
-│   ├── layout.tsx            # Root layout with navigation
-│   └── api/
-│       ├── extract/route.ts
-│       ├── meetings/route.ts
-│       └── action-items/[id]/route.ts
-├── lib/
-│   ├── openai.ts             # GPT-4o extraction logic
-│   ├── supabase.ts           # Supabase client
-│   └── types.ts              # TypeScript interfaces
-└── components/ui/            # shadcn/ui components
-```
 
-## Deploy
+Open [http://localhost:3000](http://localhost:3000) to use the app.
+
+## ☁️ Deploy
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/ChristosLeptokaropoulos/AI-Meeting-Notes-Action-Items-Automator)
 
@@ -106,3 +137,11 @@ Set environment variables in Vercel project settings:
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `OPENAI_API_KEY`
+
+## ⏱️ Build Time
+
+**~8 hours** from zero to deployed prototype.
+
+---
+
+*Built by [Christos Leptokaropoulos](https://github.com/ChristosLeptokaropoulos) as part of a rapid prototyping portfolio demonstrating AI-enabled internal tool development.*
