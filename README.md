@@ -6,7 +6,7 @@
 
 ## 🔴 Live Demo
 
-**[ai-meeting-notes-action-items-automator-8nooedz8m.vercel.app](https://ai-meeting-notes-action-items-automator-8nooedz8m.vercel.app)**
+**[ai-meeting-notes-action-items-autom.vercel.app](https://ai-meeting-notes-action-items-autom.vercel.app/)**
 
 **Text mode:** Click **"Load sample transcript"** → **"⚡ Extract Action Items"**  
 **Audio mode:** Switch to **"🎙️ Upload Audio"** → drag & drop an MP3/WAV/M4A file → **"🎙️ Transcribe & Extract"**
@@ -152,7 +152,7 @@ Open [http://localhost:3000](http://localhost:3000) to use the app.
 
 ## ☁️ Deploy
 
-Live at **[ai-meeting-notes-action-items-automator-8nooedz8m.vercel.app](https://ai-meeting-notes-action-items-automator-8nooedz8m.vercel.app)** — deployed on [Vercel](https://vercel.com/) with environment variables configured securely via the Vercel dashboard. All API keys are stored server-side — nothing is exposed to the browser.
+Live at **[ai-meeting-notes-action-items-autom.vercel.app](https://ai-meeting-notes-action-items-autom.vercel.app/)** — deployed on [Vercel](https://vercel.com/) with environment variables configured securely via the Vercel dashboard. All API keys are stored server-side — nothing is exposed to the browser.
 
 ## ⏱️ Build Time
 
