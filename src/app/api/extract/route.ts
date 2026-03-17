@@ -26,6 +26,7 @@ export async function POST(req: NextRequest) {
         title: meetingTitle,
         raw_transcript: transcript,
         summary: extraction.summary,
+        source: 'paste',
       })
       .select()
       .single();

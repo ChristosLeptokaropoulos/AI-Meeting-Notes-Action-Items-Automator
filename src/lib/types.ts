@@ -16,6 +16,7 @@ export interface Meeting {
   title: string;          // "Team Sync — March 15"
   raw_transcript: string; // The full pasted transcript
   summary?: string;       // AI-generated 2-3 sentence summary
+  source?: 'paste' | 'audio'; // How the transcript was provided
   created_at?: string;
   action_items?: ActionItem[];  // Nested when we query with joins
 }
@@ -24,4 +25,10 @@ export interface Meeting {
 export interface ExtractionResponse {
   summary: string;
   action_items: ActionItem[];
+}
+
+// The shape of what Whisper returns
+export interface TranscriptionResult {
+  transcript: string;
+  duration_seconds: number | null;
 }

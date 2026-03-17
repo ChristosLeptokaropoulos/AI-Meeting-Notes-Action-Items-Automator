@@ -275,9 +275,16 @@ export default function DashboardPage() {
                     <p className="font-medium">
                       {meeting.title || 'Untitled Meeting'}
                     </p>
-                    <Badge variant="outline">
-                      {meeting.action_items?.length || 0} items
-                    </Badge>
+                    <div className="flex items-center gap-2">
+                      {meeting.source && (
+                        <Badge variant="secondary">
+                          {meeting.source === 'audio' ? '🎤 Audio' : '📝 Pasted'}
+                        </Badge>
+                      )}
+                      <Badge variant="outline">
+                        {meeting.action_items?.length || 0} items
+                      </Badge>
+                    </div>
                   </div>
                   {meeting.summary && (
                     <p className="text-sm text-muted-foreground">{meeting.summary}</p>
